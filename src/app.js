@@ -1,2 +1,24 @@
-console.log('holis')
-console.log('010101 0101 010101010 10 10 10 1 01010 01 11 000 01 0 10 1 01 0 10 1010101 0101 010101010 10 10 10 1 01010 01 11 000 01 0 10 1 01 0 10 1010101 0101 010101010 10 10 10 1 01010 01 11 000 01 0 10 1 01 0 10 1010101 0101 010101010 10 10 10 1 01010 01 11 000 01 0 10 1 01 0 10 1010101 0101 010101010 10 10 10 1 01010 01 11 000 01 0 10 1 01 0 10 1010101 0101 010101010 10 10 10 1 01010 01 11 000 01 0 10 1 01 0 10 1')
+import express from "express"
+import displayRoutes from 'express-routemap'
+import productsRouter from "./routes/products.router.js"
+import cartsRouter from "./routes/carts.router.js"
+
+
+const app = express()
+const PUERTO = 8080
+
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+
+app.listen(PUERTO, () => {
+    displayRoutes(app)
+    console.log('escuchando en el puerto 8080')
+})
+
+
+app.use("/api/products", productsRouter)
+app.use("/api/carts", cartsRouter)
+
+
+
+app.use("/static", express.static("./src/public"))
