@@ -21,4 +21,4 @@ app.use("/api/carts", cartsRouter)
 
 
 
-app.use("/static", express.static("./src/public"))
+app.use("/static", express.static("./src/public")) 
