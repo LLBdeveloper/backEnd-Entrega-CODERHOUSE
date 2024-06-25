@@ -5,6 +5,7 @@ import displayRoutes from 'express-routemap'
 import productsRouter from "./routes/products.router.js"
 import cartsRouter from "./routes/carts.router.js"
 import viewsRouter from "./routes/views.router.js"
+import ProductManager from "./controllers/products.manager.js"
 
 
 const app = express()
@@ -31,11 +32,13 @@ const httpServer = app.listen(PUERTO, () => {
 })
 
 
-import ProductManager from "./controllers/products.manager.js"
-const productManager = new ProductManager("./src/models/productos.json")
+const productManager = new ProductManager("./src/models/products.json")
 
 const io = new Server(httpServer)
 
-io.on("connection", ()=>{
+io.on("connection", async (socket)=>{
     console.log("un cliente se conecto")
+
+    //enviamos el array de productos
+    socket.emit("productos", await productManager.getProducts())
 })
