@@ -5,13 +5,14 @@ socket.on("productos", (data) =>{
 })
 
 //funcion para renderizar nuestros productos
-
 const renderProductos = (data) => {
     const contenedorProductos = document.getElementById("contenedorProductos")
     contenedorProductos.innerHTML = ""
 
     data.forEach(item => {
         const card = document.createElement("div")
+        card.classList.add("containerCards");
+
         card.innerHTML = `  
                             <p> ${item.id} </>
                             <p> ${item.title} </p>
@@ -29,3 +30,23 @@ const renderProductos = (data) => {
 const eliminarProducto = (id) => {
     socket.emit("eliminarProducto", id)
 }
+
+//agregamos productos con el formulario
+document. getElementById("btnEnviar").addEventListener("click", () =>{
+    agregarProducto()
+})
+
+const agregarProducto = () => {
+    const producto = {
+        title: document.getElementById("title").value,
+        description: document.getElementById("description").value,
+        price: document.getElementById("price").value,
+        img: document.getElementById("img").value,
+        code: document.getElementById("code").value,
+        stock: document.getElementById("stock").value,
+        category: document.getElementById("category").value,
+        status: document.getElementById("status").value === "true"
+    }
+    socket.emit("agregarProducto", producto)
+}
+

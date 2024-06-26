@@ -7,9 +7,10 @@ import cartsRouter from "./routes/carts.router.js"
 import viewsRouter from "./routes/views.router.js"
 import ProductManager from "./controllers/products.manager.js"
 
-
 const app = express()
 const PUERTO = 8080
+const productManager = new ProductManager("./src/models/products.json")
+
 
 //Middleware
 app.use(express.json())
@@ -31,23 +32,17 @@ const httpServer = app.listen(PUERTO, () => {
     console.log('escuchando en el puerto 8080')
 })
 
-
-const productManager = new ProductManager("./src/models/products.json")
-
+//Socket.io
 const io = new Server(httpServer)
-
 io.on("connection", async (socket)=>{
-    console.log("un cliente se conecto")
-
-    //enviamos el array de productos
+    console.log("+++ New connection +++ ")
     socket.emit("productos", await productManager.getProducts())
-
-    //recibimos el evento eliminarProductos desde el cliente
     socket.on("eliminarProducto", async (id)=>{
         await productManager.deleteProduct(id)
-
-        //le voy a enviar la lista actualizada al cliente
-        //se utiliza io.sockets.emit en lugar de socket.emit io.sockets.emit envía el evento a todos los clientes conectados, mientras que socket.emit envía el evento solo al cliente específico que se conectó.
+        io.sockets.emit("productos", await productManager.getProducts())
+    })
+    socket.on("agregarProducto", async (producto) =>{
+        await productManager.addProduct(producto)
         io.sockets.emit("productos", await productManager.getProducts())
     })
 })
