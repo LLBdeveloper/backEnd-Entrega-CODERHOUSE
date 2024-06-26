@@ -1,9 +1,4 @@
-
-
 const socket = io()
-
-console.log('sii funciona')
-
 
 socket.on("productos", (data) =>{
     renderProductos(data)
@@ -13,7 +8,8 @@ socket.on("productos", (data) =>{
 
 const renderProductos = (data) => {
     const contenedorProductos = document.getElementById("contenedorProductos")
-    
+    contenedorProductos.innerHTML = ""
+
     data.forEach(item => {
         const card = document.createElement("div")
         card.innerHTML = `  
@@ -23,5 +19,13 @@ const renderProductos = (data) => {
                             <button> Eliminar </button>
         `
         contenedorProductos.appendChild(card)
+        //agregamos evento al boton delete
+        card.querySelector("button").addEventListener("click", () => {
+            eliminarProducto(item.id)
+        })
     })
+}
+
+const eliminarProducto = (id) => {
+    socket.emit("eliminarProducto", id)
 }

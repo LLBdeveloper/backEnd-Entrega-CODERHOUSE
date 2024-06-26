@@ -41,4 +41,13 @@ io.on("connection", async (socket)=>{
 
     //enviamos el array de productos
     socket.emit("productos", await productManager.getProducts())
+
+    //recibimos el evento eliminarProductos desde el cliente
+    socket.on("eliminarProducto", async (id)=>{
+        await productManager.deleteProduct(id)
+
+        //le voy a enviar la lista actualizada al cliente
+        //se utiliza io.sockets.emit en lugar de socket.emit io.sockets.emit envía el evento a todos los clientes conectados, mientras que socket.emit envía el evento solo al cliente específico que se conectó.
+        io.sockets.emit("productos", await productManager.getProducts())
+    })
 })
