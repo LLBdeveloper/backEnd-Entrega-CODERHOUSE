@@ -27,15 +27,17 @@ app.use("/api/products", productsRouter)
 app.use("/api/carts", cartsRouter)
 app.use("/", viewsRouter)
 
+
+//Listen
 const httpServer = app.listen(PUERTO, () => {
     displayRoutes(app)
-    console.log('escuchando en el puerto 8080')
+    console.log('/// escuchando en el puerto 8080 ///')
 })
 
 //Socket.io
 const io = new Server(httpServer)
 io.on("connection", async (socket)=>{
-    console.log("+++ New connection +++ ")
+    console.log("+++ New connection SOCKET.IO +++ ")
     socket.emit("productos", await productManager.getProducts())
     socket.on("eliminarProducto", async (id)=>{
         await productManager.deleteProduct(id)
